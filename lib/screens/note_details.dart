@@ -43,6 +43,7 @@ class _NoteDetail extends State<NoteDetail> {
         onWillPop: () {
           //controls back press...
           moveToLastScreen();
+          return;
         },
         child: Scaffold(
           appBar: AppBar(
@@ -55,125 +56,128 @@ class _NoteDetail extends State<NoteDetail> {
             ),
           ),
           body: Form(
-            key: _formKey,
+              key: _formKey,
               child: Padding(
-            padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-            child: ListView(
-              children: <Widget>[
-                Text('How important is the note?',
-                style: TextStyle(color: Colors.grey),),
-                ListTile(
-                  title: DropdownButton(
-                      items: _priorities.map((String dropDownStringItem) {
-                        return DropdownMenuItem<String>(
-                          value: dropDownStringItem,
-                          child: Text(dropDownStringItem),
-                        );
-                      }).toList(),
-                      style: textStyle,
-                      value: getPriorityAsString(note.priorities),
-                      onChanged: (valueSelectedByUser) {
-                        setState(() {
-                          debugPrint('User selected $valueSelectedByUser');
-                          updatePriorityAsInt(valueSelectedByUser);
-                        });
-                      }),
-                ),
+                padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
+                child: ListView(
+                  children: <Widget>[
+                    Text(
+                      'How important is the note?',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    ListTile(
+                      title: DropdownButton(
+                          items: _priorities.map((String dropDownStringItem) {
+                            return DropdownMenuItem<String>(
+                              value: dropDownStringItem,
+                              child: Text(dropDownStringItem),
+                            );
+                          }).toList(),
+                          style: textStyle,
+                          value: getPriorityAsString(note.priorities),
+                          onChanged: (valueSelectedByUser) {
+                            setState(() {
+                              debugPrint('User selected $valueSelectedByUser');
+                              updatePriorityAsInt(valueSelectedByUser);
+                            });
+                          }),
+                    ),
 
-                //....Handling Text Fields...
-                Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: TextFormField(
-                    validator: (String val) {
-                      if (val.isEmpty) {
-                        return 'Enter a Title...';
-                      }
-                    },
-                    controller: titleController,
-                    style: textStyle,
-                    onChanged: (value) {
-                      updateTitle();
-                    },
-                    decoration: InputDecoration(
-                      labelStyle: textStyle,
-                      labelText: 'Title',
-                      hintText: 'Enter note title..',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
+                    //....Handling Text Fields...
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      child: TextFormField(
+                        validator: (String val) {
+                          if (val.isEmpty) {
+                            return 'Enter a Title...';
+                          } else {
+                            return val;
+                          }
+                        },
+                        controller: titleController,
+                        style: textStyle,
+                        onChanged: (value) {
+                          updateTitle();
+                        },
+                        decoration: InputDecoration(
+                          labelStyle: textStyle,
+                          labelText: 'Title',
+                          hintText: 'Enter note title..',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
 
-                Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: TextField(
-                    minLines: 10,
-                    maxLines: 15,
-                    controller: descController,
-                    style: textStyle,
-                    onChanged: (value) {
-                      debugPrint('Something changed');
-                      updateDescription();
-                    },
-                    decoration: InputDecoration(
-                      labelStyle: textStyle,
-                      alignLabelWithHint: true,
-                      labelText: 'Details',
-                      hintText: 'Enter note description..',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      child: TextField(
+                        minLines: 10,
+                        maxLines: 15,
+                        controller: descController,
+                        style: textStyle,
+                        onChanged: (value) {
+                          debugPrint('Something changed');
+                          updateDescription();
+                        },
+                        decoration: InputDecoration(
+                          labelStyle: textStyle,
+                          alignLabelWithHint: true,
+                          labelText: 'Details',
+                          hintText: 'Enter note description..',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
 
-                //...Fourth Element....
-                Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: RaisedButton(
+                    //...Fourth Element....
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: RaisedButton(
                             color: Theme.of(context).primaryColorDark,
-                        textColor: Theme.of(context).primaryColorLight,
-                        child: Text(
-                          'Save',
-                          textScaleFactor: 1.5,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if(_formKey.currentState.validate()){
-                              _save();
-                            }
-
-                          });
-                        },
-                      )),
-                      Container(
-                        width: 5.0,
-                      ),
-                      Expanded(
-                          child: RaisedButton(
+                            textColor: Theme.of(context).primaryColorLight,
+                            child: Text(
+                              'Save',
+                              textScaleFactor: 1.5,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_formKey.currentState.validate()) {
+                                  _save();
+                                }
+                              });
+                            },
+                          )),
+                          Container(
+                            width: 5.0,
+                          ),
+                          Expanded(
+                              child: RaisedButton(
                             color: Colors.redAccent,
-                        textColor: Theme.of(context).primaryColorLight,
-                        child: Text(
-                          'Delete',
-                          textScaleFactor: 1.5,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                             // _deleteError(context);
-                              _delete();
-                          });
-                        },
-                      )),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )),
+                            textColor: Theme.of(context).primaryColorLight,
+                            child: Text(
+                              'Delete',
+                              textScaleFactor: 1.5,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                // _deleteError(context);
+                                _delete();
+                              });
+                            },
+                          )),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )),
         ));
   }
 
@@ -263,9 +267,10 @@ class _NoteDetail extends State<NoteDetail> {
     showDialog(context: context, builder: (_) => alertDialog);
   }
 
-  void _deleteError (BuildContext context){
-      _showSnackBar(context, 'Note Deleted Successfully');
+  void _deleteError(BuildContext context) {
+    _showSnackBar(context, 'Note Deleted Successfully');
   }
+
   void _showSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(content: Text(message));
     Scaffold.of(context).showSnackBar(snackBar);
